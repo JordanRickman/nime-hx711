@@ -29,7 +29,8 @@ const float CALIBRATION_FACTOR = 31570.0; //This value is obtained using the Spa
 
 const String OSC_DEST_IP = "192.168.43.188";
 const int OSC_DEST_PORT = 5000;
-const String OSC_DEST_ADDR = "/pull";
+const String OSC_DEST_ADDR = "/pull"; // Address for the scaled reading. (0-1)
+const String OSC_DEST_ADDR_RAW = "/pull/raw"; // Address for the raw reading (lbs)
 
 HX711 scale;
 OscWiFi osc;
@@ -94,4 +95,6 @@ void loop() {
   float output = pow(reading_trimmed, 1.0 / CURVE_DEGREE);
   String dest_addr = OSC_DEST_ADDR + "/" + String(sensorID); // e.g. /pull/0
   osc.send(OSC_DEST_IP, OSC_DEST_PORT, dest_addr, output);
+  String dest_addr_raw = OSC_DEST_ADDR_RAW + "/" + String(sensorID); // e.g. /pull/raw/0
+  osc.send(OSC_DEST_IP, OSC_DEST_PORT, dest_addr_raw, reading_lb);
 }
